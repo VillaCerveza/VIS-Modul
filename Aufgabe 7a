@@ -1,0 +1,6 @@
+import pandas as pd
+import plotly.express as px
+from statistics import mean
+
+datei = open("C:\\Users\\fperr\\OneDrive\\Desktop\\HS23_24\\VIS\\best-selling-books.csv")
+print(datei.read())
