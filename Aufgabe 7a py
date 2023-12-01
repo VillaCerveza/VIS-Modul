@@ -4,3 +4,25 @@ from statistics import mean
 
 datei = open("C:\\Users\\fperr\\OneDrive\\Desktop\\HS23_24\\VIS\\best-selling-books.csv")
 print(datei.read())
+
+#schönneri variante:
+
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import numpy as np
+import seaborn as sns
+%matplotlib inline
+
+datei_pfad = "C:\\Users\\fperr\\OneDrive\\Desktop\\HS23_24\\VIS\\best-selling-books.csv"
+
+mögliche_kodierungen = ['utf-8', 'latin-1', 'ISO-8859-1', 'cp1252']
+
+for kodierung in mögliche_kodierungen:
+    try:
+        df = pd.read_csv(datei_pfad, encoding=kodierung, sep=';')
+        break  # Wenn die Datei erfolgreich geladen wird, breche die Schleife ab
+    except UnicodeDecodeError:
+        print(f"Konnte nicht mit der Kodierung {kodierung} öffnen. Versuche eine andere.")
+
+df
