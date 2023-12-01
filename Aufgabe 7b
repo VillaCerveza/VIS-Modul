@@ -1,0 +1,24 @@
+#Scatterplot
+
+import pandas as pd
+import plotly.express as px
+
+datei_pfad = "C:\\Users\\fperr\\OneDrive\\Desktop\\HS23_24\\VIS\\best-selling-books.csv"
+
+# Lese die CSV-Datei unter Verwendung von verschiedenen Kodierungen
+mögliche_kodierungen = ['utf-8', 'latin-1', 'ISO-8859-1', 'cp1252']
+
+for kodierung in mögliche_kodierungen:
+    try:
+        df = pd.read_csv(datei_pfad, encoding=kodierung, sep=';')
+        break  # Wenn die Datei erfolgreich geladen wird, breche die Schleife ab
+    except UnicodeDecodeError:
+        print(f"Konnte nicht mit der Kodierung {kodierung} öffnen. Versuche eine andere.")
+
+# Erstelle einen Scatterplot
+fig = px.scatter(df, x='firstpublished', y='approximatesalesinmillions', title='Scatterplot')
+fig.show()
+
+# Gib den Inhalt der Datei aus
+with open(datei_pfad, 'r', encoding='utf-8') as datei:
+    print(datei.read())
