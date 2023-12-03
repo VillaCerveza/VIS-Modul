@@ -1,27 +1,22 @@
 import pandas as pd
 import plotly.express as px
 
-datei_pfad = "C:\\Users\\fperr\\OneDrive\\Desktop\\HS23_24\\VIS\\best-selling-books.csv"
+datei_pfad = "https://raw.githubusercontent.com/VillaCerveza/VIS-Modul/main/best-selling-books.csv"
 
-# Lese die CSV-Datei unter Verwendung von verschiedenen Kodierungen
 mögliche_kodierungen = ['utf-8', 'latin-1', 'ISO-8859-1', 'cp1252']
 
 for kodierung in mögliche_kodierungen:
     try:
         df = pd.read_csv(datei_pfad, encoding=kodierung, sep=';')
-        break  # Wenn die Datei erfolgreich geladen wird, breche die Schleife ab
+        break  
     except UnicodeDecodeError:
         print(f"Konnte nicht mit der Kodierung {kodierung} öffnen. Versuche eine andere.")
 
-# Filtere die Daten nach dem gewünschten Zeitraum (1800 bis 1900)
 filtered_df = df[(df['firstpublished'] >= 1800) & (df['firstpublished'] <= 1900)]
 
-# Überprüfe, ob die Spalte 'firstpublished' im Index ist
 if 'firstpublished' in filtered_df.columns:
-    # Ersetze 'DEINE_X_SPALTE' und 'DEINE_Y_SPALTE' durch die tatsächlichen Spaltennamen
     fig = px.bar(filtered_df, x='firstpublished', y='approximatesalesinmillions', title='Bar Chart')
 
-    # Manuell festgelegte Ticks für die X-Achse
     tickvals = list(range(1800, 1901, 10))  # Hier können Sie den Schritt anpassen
     ticktext = [str(year) for year in tickvals]
 
@@ -31,5 +26,4 @@ if 'firstpublished' in filtered_df.columns:
         ticktext=ticktext
     )
 
-    # Zeige das Diagramm an
     fig.show()
