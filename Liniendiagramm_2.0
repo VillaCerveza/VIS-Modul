@@ -1,0 +1,17 @@
+import pandas as pd
+import plotly.express as px
+
+# GitHub-Dateipfad definieren
+github_path = "https://github.com/VillaCerveza/VIS-Modul/raw/main/BEREINIGT_ohne_Autoren_top_100.csv"
+
+# CSV-Datei von GitHub einlesen
+df = pd.read_csv(github_path)
+
+# Abfolge der verknüpften Datenpunkte nach Datum
+df = df.sort_values(by='First published')
+
+# Liniendiagramm erstellen
+liniendiagramm = px.line(df, x='First published', y='Approximate sales in millions', color='Original language', hover_data=['Book'], markers=True)
+
+# Liniendiagramm anzeigen
+liniendiagramm.show()
