@@ -1,0 +1,18 @@
+import pandas as pd
+import plotly.express as px
+
+# GitHub-Dateipfad definieren
+github_path = "https://github.com/VillaCerveza/VIS-Modul/raw/main/BEREINIGT_ohne_Autoren_top_100.csv"
+
+# CSV-Datei von GitHub einlesen
+df = pd.read_csv(github_path)
+
+# Überprüfung der Spaltennamen im DataFrame
+print(df.columns)
+
+# Plotting the scatter plot with hover data
+fig = px.scatter(
+    df, x='First published', y='Approximate sales in millions', title='Scatter Plot of the Dataset',
+    hover_data=['Book']
+)
+fig.show()
