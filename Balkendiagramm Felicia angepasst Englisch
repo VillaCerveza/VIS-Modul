@@ -1,0 +1,23 @@
+import pandas as pd
+import plotly.express as px
+
+datei_pfad = "https://raw.githubusercontent.com/VillaCerveza/VIS-Modul/main/BEREINIGT_ohne_Autoren_top_100.csv"
+
+mögliche_kodierungen = ['utf-8', 'latin-1', 'ISO-8859-1', 'cp1252']
+
+for kodierung in mögliche_kodierungen:
+    try:
+        df = pd.read_csv(datei_pfad, encoding=kodierung, sep=',')
+        break  # Wenn die Datei erfolgreich geladen wird, breche die Schleife ab
+    except UnicodeDecodeError as e:
+        print(f"Fehler beim Lesen mit der Kodierung {kodierung}: {e}")
+
+filtered_df = df[(df['First published'] >= 1915) & (df['First published'] <= 2015)]
+
+fig = px.bar(filtered_df, x='First published', y='Approximate sales in millions', 
+             title='Booksales over the years (1915-2015)',
+             labels={'First published': 'First published', 'Approximate sales in millions': 'Approximate sales in millions'})
+
+fig.update_xaxes(tickmode='linear', tickvals=list(range(1860, 2000, 10)), ticktext=[str(year) for year in range(1860, 2000, 10)])
+
+fig.show()
