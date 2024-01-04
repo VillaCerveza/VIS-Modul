@@ -1,0 +1,150 @@
+# Bibliotheken importieren
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import dash_bootstrap_components as dbc
+from dash import Output, Input
+import pandas as pd
+import plotly.express as px
+import math
+import numpy as np
+
+
+# Dash-Web App 
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
+
+
+
+# GitHub-Dateipfad definieren
+github_path = "https://github.com/VillaCerveza/VIS-Modul/raw/main/BEREINIGT_ohne_Autoren_top_100.csv"
+
+# CSV-Datei von GitHub einlesen
+df = pd.read_csv(github_path)
+
+
+
+# Daten für das erste Diagramm (Balkendiagramm Originalsprache und Verkaufszahlen, Jess)
+
+# nach Originalsprache wird gruppiert und danach der Durchschnitt der Verkaufszahlen berechnet
+df_grouped_1 = df.groupby('Original language')['Approximate sales in millions'].mean().reset_index()
+
+fig1 = px.bar(df_grouped_1, x='Original language', y='Approximate sales in millions',
+              title='Durchschn. Verkauf nach Sprache',
+              color='Original language', color_discrete_sequence=px.colors.qualitative.Light24,
+              template='plotly_dark')
+
+# Farblegende verbergen
+fig1.update_traces(showlegend=False)
+
+
+
+# Daten für das zweite Diagramm (Histogramm Veröffentlichungsjahr 1860-1999 und Verkaufszahlen, Feli)
+
+filtered_df = df[(df['First published'] >= 1860) & (df['First published'] <= 1999)]
+
+fig2 = px.bar(filtered_df, x='First published', y='Approximate sales in millions', 
+             title='Verkaufszahlen von Büchern (1860-1999)',
+             template='plotly_dark')
+
+fig2.update_xaxes(tickmode='linear', tickvals=list(range(1860, 2000, 10)), ticktext=[str(year) for year in range(1860, 2000, 10)])
+
+           
+
+# Daten für das dritte Diagramm (Liniendiagramm Veröffentlichungsjahr und Verkaufszahlen, Sarina)
+
+# Abfolge der verknüpften Datenpunkte nach Datum
+df_sorted = df.sort_values(by=['Original language', 'First published'])
+
+fig3 = px.line(df_sorted, x='First published', y='Approximate sales in millions',
+               title='Verkaufszahlen nach Originalsprache im Zeitverlauf',
+               color='Original language', hover_data=['Book'], markers=True, 
+               color_discrete_sequence=px.colors.qualitative.Light24,
+               template='plotly_dark')
+
+
+                                     
+# Layoutgestaltung
+app.layout = dbc.Container([
+    
+    
+    # Header für Dashboard mit Logo, Titel und Dark/Light-Mode Button
+    html.Div([
+        # Logo
+        html.Img(src='https://github.com/VillaCerveza/VIS-Modul/raw/main/Logo_Best_Selling_Books.png', 
+                height='100px', 
+                style={'vertical-align': 'middle', 'border': '5px solid gold'}),
+        # Titel
+        html.H1("Dashboard: Best Selling Books", id='header-title',
+                style={'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '10px'}),
+    ], id='header'),
+    
+    
+    # Aufbau Diagramme und Interaktionen
+    dbc.Row([
+        
+        # Diagramm 1 & 2 oben
+        dbc.Col([
+            dbc.Row([
+                dbc.Col(dcc.Graph(id='diagramm1', figure=fig1, style={'height': '350px'}), width=6, id='content-diagram1'),
+                dbc.Col(dcc.Graph(id='diagramm2', figure=fig2, style={'height': '350px'}), width=6, id='content-diagram2'),
+            ]),
+            
+            
+        # Diagramm 3 unten
+            dbc.Row([
+                dbc.Col(dcc.Graph(id='diagramm3', figure=fig3, style={'height': '470px'}), width=18, id='content-diagram3'),
+            ]),
+            
+            # Rangeslider für Zeitverlauf bei Diagramm 3
+                 dbc.Row([
+                     dbc.Col(
+                         dcc.RangeSlider(
+                             id='rangeslider',
+                             min=df['First published'].min(),
+                             max=df['First published'].max(),
+                             step=1,
+                             marks={1800: '1800', 1850: '1850', 1900: '1900', 1950: '1950', 2000: '2000'},
+                             value=[df['First published'].min(), df['First published'].max()],
+                             tooltip={"placement": "bottom", "always_visible": True}), 
+                             width=18, id='content-rangeslider'
+                             )]),
+            
+            
+        ], id='content'),
+        
+    ], style={'margin-bottom': '20px'}),
+    
+        
+
+    # Footer
+    html.Div("designed by Bucher, Perrucci, Ratnam, Zeiter", id='footer'),
+
+])
+
+# Callback-Änderungen
+@app.callback(
+    Output('diagramm3', 'figure'),
+    Input('rangeslider', 'value')
+    )
+
+def update_diagramm3(slider_range):
+    low, high = slider_range
+    filtered_df = df[(df['First published'] >= low) & (df['First published'] <= high)]
+    df_sorted = filtered_df.sort_values(by=['Original language', 'First published'])
+    
+    fig9 = px.line(
+        df_sorted,
+        x='First published',
+        y='Approximate sales in millions',
+        title='Verkaufszahlen nach Originalsprache im Zeitverlauf',
+        color='Original language', 
+        hover_data=['Book'], 
+        markers=True, 
+        color_discrete_sequence=px.colors.qualitative.Light24,
+        template='plotly_dark')
+    return fig9
+
+
+# Dash-App starten
+if __name__ == '__main__':
+    app.run_server(debug=False, port=8110)
