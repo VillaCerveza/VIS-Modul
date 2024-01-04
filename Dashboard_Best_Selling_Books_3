@@ -131,6 +131,23 @@ def update_diagramm3(slider_range):
     low, high = slider_range
     filtered_df = df[(df['First published'] >= low) & (df['First published'] <= high)]
     df_sorted = filtered_df.sort_values(by=['Original language', 'First published'])
+
+    color_map = {
+        'Chinese': '#FD3216',
+        'Czech': '#00FE35',
+        'Dutch': '#6A76FC',
+        'English': '#FED4C4',
+        'French': '#FE00CE',
+        'German': '#0DF9FF',
+        'Hindi': '#F6F926',
+        'Italian': '#FF9616',
+        'Japanese': '#479B55',
+        'Norwegian': '#EEA6FB',
+        'Portuguese': '#DC587D',
+        'Russian': '#D626FF',
+        'Spanish': '#6E899C',
+        'Swedish': '#00B5F7'
+        }
     
     fig9 = px.line(
         df_sorted,
@@ -140,7 +157,7 @@ def update_diagramm3(slider_range):
         color='Original language', 
         hover_data=['Book'], 
         markers=True, 
-        color_discrete_sequence=px.colors.qualitative.Light24,
+        color_discrete_map=color_map,
         template='plotly_dark')
     return fig9
 
