@@ -38,12 +38,12 @@ fig1.update_traces(showlegend=False)
 
 
 
-# Daten für das zweite Diagramm (Histogramm Veröffentlichungsjahr 1860-1999 und Verkaufszahlen, Feli)
+# Daten für das zweite Diagramm (Histogramm Veröffentlichungsjahr 1965-2015 und Verkaufszahlen, Feli)
 
-filtered_df = df[(df['First published'] >= 1860) & (df['First published'] <= 1999)]
+filtered_df = df[(df['First published'] >= 1965) & (df['First published'] <= 2015)]
 
 fig2 = px.bar(filtered_df, x='First published', y='Approximate sales in millions', 
-             title='Verkaufszahlen von Büchern (1860-1999)',
+             title='Verkaufszahlen von Büchern (1965-2015)',
              template='plotly_dark')
 
 fig2.update_xaxes(tickmode='linear', tickvals=list(range(1860, 2000, 10)), ticktext=[str(year) for year in range(1860, 2000, 10)])
