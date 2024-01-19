@@ -99,13 +99,21 @@ fig4.update_layout(
     title=dict(text='Top 5 Genres', x=0.5, font=dict(size=20))
 )
 
+
 # Dropdown-Menü für Sprachfilter
 languages_dropdown = dcc.Dropdown(
     id='languages-dropdown',
-    options=[{'label': lang, 'value': lang} for lang in df['Original language'].unique()],
+    options=[
+        {'label': lang, 'value': lang, 'style': {'backgroundColor': '#1E1E1E', 'color': 'white', 'border': 'none', 'boxShadow': 'none', 'fontFamily': 'Arial, sans-serif'}}
+        for lang in df['Original language'].unique()
+    ],
     multi=True,
-    value=df['Original language'].unique()
+    value=df['Original language'].unique(),
+    style={'backgroundColor': '#1E1E1E', 'color': 'white', 'border': 'none', 'boxShadow': 'none', 'display': 'block', 'width': '100%', 'fontFamily': 'Arial, sans-serif', 'textAlign': 'left', 'zIndex': 1000},
+    className='selected',  # Füge die CSS-Klasse 'selected' hinzu
 )
+
+
 
 # Callback-Funktion für das aktualisierte Diagramm basierend auf dem Dropdown
 @app.callback(
@@ -140,10 +148,9 @@ app.layout = dbc.Container([
         html.H1("Dashboard: Best Selling Books", id='header-title',
                 style={'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '10px'}),
     ], id='header'),
-
-       html.H6("Data-Info: Best Selling Books, Quelle:Online-Plattform «Kaggle», 174 meistverkauften Bücher, CSV-Datei, einer Grösse von 6 kB (komprimiert im ZIP-File)" , id='header-info',
+    
+    html.H6("Data-Info: Best Selling Books, Quelle:Online-Plattform «Kaggle», 174 meistverkauften Bücher, CSV-Datei, einer Grösse von 6 kB (komprimiert im ZIP-File)" , id='header-info',
                 style={'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '10px'}),
-    ], id='header'),
     
     dbc.Row([
         dbc.Col([
@@ -186,4 +193,4 @@ app.layout = dbc.Container([
 
 # Dash-App starten
 if __name__ == '__main__':
-    app.run_server(debug=False, port=8014)
+    app.run_server(debug=False, port=819)
