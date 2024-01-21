@@ -137,8 +137,10 @@ app.layout = dbc.Container([
                 style={'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '10px'}),
     
     ], id='header'),
-    
-    
+
+       #Data Info
+       html.H6("Data-Info: Best Selling Books, Quelle:Online-Plattform «Kaggle», 174 meistverkauften Bücher, CSV-Datei, einer Grösse von 6 kB (komprimiert im ZIP-File)" , id='header-info',
+                style={'display': 'inline-block', 'vertical-align': 'middle', 'margin-left': '10px'}),
     # Aufbau Diagramme und Interaktionen
     dbc.Row([
         
